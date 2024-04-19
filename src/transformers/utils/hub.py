@@ -97,6 +97,14 @@ PYTORCH_PRETRAINED_BERT_CACHE = os.getenv("PYTORCH_PRETRAINED_BERT_CACHE", const
 PYTORCH_TRANSFORMERS_CACHE = os.getenv("PYTORCH_TRANSFORMERS_CACHE", PYTORCH_PRETRAINED_BERT_CACHE)
 TRANSFORMERS_CACHE = os.getenv("TRANSFORMERS_CACHE", PYTORCH_TRANSFORMERS_CACHE)
 
+if TRANSFORMERS_CACHE is not None and TRANSFORMERS_CACHE != '':
+    if not os.path.isdir(TRANSFORMERS_CACHE):
+        logger.warning("Specified TRANSFORMERS_CACHE is not a directory.")
+    if not os.access(TRANSFORMERS_CACHE, os.W_OK):
+        logger.warning("Specified TRANSFORMERS_CACHE is not writeable.")
+    if not os.access(TRANSFORMERS_CACHE, os.R_OK):
+        logger.warning("Specified TRANSFORMERS_CACHE is not readable.")
+
 # Onetime move from the old location to the new one if no ENV variable has been set.
 if (
     os.path.isdir(old_default_cache_path)
