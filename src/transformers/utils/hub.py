@@ -98,8 +98,8 @@ PYTORCH_TRANSFORMERS_CACHE = os.getenv("PYTORCH_TRANSFORMERS_CACHE", PYTORCH_PRE
 TRANSFORMERS_CACHE = os.getenv("TRANSFORMERS_CACHE", PYTORCH_TRANSFORMERS_CACHE)
 
 if TRANSFORMERS_CACHE is not None and TRANSFORMERS_CACHE != '':
-    if not os.path.isdir(TRANSFORMERS_CACHE):
-        logger.warning("Specified TRANSFORMERS_CACHE is not a directory.")
+    if os.path.exists(TRANSFORMERS_CACHE):
+        assert os.path.isdir(TRANSFORMERS_CACHE), "Expected specified TRANSFORMERS_CACHE to be not a directory."
     if not os.access(TRANSFORMERS_CACHE, os.W_OK):
         logger.warning("Specified TRANSFORMERS_CACHE is not writeable.")
     if not os.access(TRANSFORMERS_CACHE, os.R_OK):
@@ -430,7 +430,7 @@ def cached_file(
             f"{path_or_repo_id} is not a local folder and is not a valid model identifier "
             "listed on 'https://huggingface.co/models'\nIf this is a private repository, make sure to pass a token "
             "having permission to this repo either by logging in with `huggingface-cli login` or by passing "
-            "`token=<your_token>`"
+            "`HF_TOKEN=<your_token>`"
         ) from e
     except RevisionNotFoundError as e:
         raise EnvironmentError(
